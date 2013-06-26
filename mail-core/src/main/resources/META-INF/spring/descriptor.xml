@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+    <!--
+    This spring descriptor.xml defines the application context available to the IO projects
+    core components.
+
+    This context will be used as the parent for other module contexts, so should contain
+    objects that are of general system utility.
+    -->
+
+    <bean id="coreContext" class="org.springframework.context.support.ClassPathXmlApplicationContext">
+        <constructor-arg>
+            <list>
+                <value>classpath:META-INF/spring/include.xml</value>
+                <value>classpath:coreContext.xml</value>
+            </list>
+        </constructor-arg>
+        <!-- The root context is supplied by the IOContextLocator. -->
+        <constructor-arg ref="rootContext"/>
+    </bean>
+
+</beans>
