@@ -35,8 +35,14 @@
 
         <aspectj.version>1.7.2</aspectj.version>
 
-        <!-- Plugin version -->
-        <surefire.plugin.version>2.12</surefire.plugin.version>
+        <!-- Maven Plugin versions -->
+        <surefire.plugin.version>2.14.1</surefire.plugin.version>
+        <compiler.plugin.version>3.1</compiler.plugin.version>
+        <jar.plugin.version>2.3.2</jar.plugin.version>
+        <war.plugin.version>2.1.1</war.plugin.version>
+
+        <!-- External plugin versions -->
+        <aspectj.plugin.version>1.4</aspectj.plugin.version>
 
     </properties>
 
@@ -56,47 +62,6 @@
     <dependencyManagement>
 
         <dependencies>
-
-            <!-- Internal project dependencies -->
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>mail-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>mail-client</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>mail-test</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-                <type>test-jar</type>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>mail-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>mail-web</artifactId>
-                <version>${project.version}</version>
-                <classifier>classes</classifier>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>mail-rest-server</artifactId>
-                <version>${project.version}</version>
-                <classifier>classes</classifier>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>mail-rest-client</artifactId>
-                <version>${project.version}</version>
-            </dependency>
 
             <!-- Application framework. -->
             <dependency>
@@ -252,6 +217,7 @@
                 <version>${testng.version}</version>
                 <scope>test</scope>
                 <exclusions>
+                    <!-- Remove JUnit to ensure we don't use it by accident. -->
                     <exclusion>
                         <artifactId>junit</artifactId>
                         <groupId>junit</groupId>
@@ -265,6 +231,7 @@
                 <version>${mockito.version}</version>
                 <scope>test</scope>
                 <exclusions>
+                    <!-- Remove hamcrest to avoid conflicts with the version we use. -->
                     <exclusion>
                         <groupId>org.hamcrest</groupId>
                         <artifactId>hamcrest-core</artifactId>
@@ -280,11 +247,59 @@
             </dependency>
 
 
-            <dependency> <!-- We use the DirectoryScanner within Integration tests. -->
+            <dependency> <!-- We use the ant DirectoryScanner within Integration tests. -->
                 <groupId>org.apache.ant</groupId>
                 <artifactId>ant</artifactId>
                 <version>${ant.version}</version>
                 <scope>test</scope>
+            </dependency>
+
+            <!-- Internal project dependencies -->
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>mail-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>mail-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>mail-test</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+                <type>test-jar</type>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>mail-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>mail-web</artifactId>
+                <version>${project.version}</version>
+                <classifier>classes</classifier>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>mail-rest-server</artifactId>
+                <version>${project.version}</version>
+                <classifier>classes</classifier>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>mail-rest-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>mail-test</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+                <type>test-jar</type>
             </dependency>
 
         </dependencies>
@@ -372,16 +387,16 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.1</version>
+                    <version>${compiler.plugin.version}</version>
                     <configuration>
-                        <source>1.7</source>
-                        <target>1.7</target>
+                        <source>${project.build.source}</source>
+                        <target>${project.build.target}</target>
                     </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>aspectj-maven-plugin</artifactId>
-                    <version>1.4</version>
+                    <version>${aspectj.plugin.version}</version>
                     <dependencies>
                         <dependency>
                             <groupId>org.aspectj</groupId>
@@ -414,7 +429,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>2.3.2</version>
+                    <version>${jar.plugin.version}</version>
                     <executions>
                         <execution>
                             <goals>
@@ -426,13 +441,13 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.14.1</version>
+                    <version>${surefire.plugin.version}</version>
                     <dependencies>
                         <!-- pull in the surefire-testng dependency directly to avoid classpath issues with hamcrest. -->
                         <dependency>
                             <groupId>org.apache.maven.surefire</groupId>
                             <artifactId>surefire-testng</artifactId>
-                            <version>2.14.1</version>
+                            <version>${surefire.plugin.version}</version>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -445,7 +460,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>2.1.1</version>
+                    <version>${war.plugin.version}</version>
                     <configuration>
                         <attachClasses>true</attachClasses>
                         <webappDirectory>target/webapp</webappDirectory>

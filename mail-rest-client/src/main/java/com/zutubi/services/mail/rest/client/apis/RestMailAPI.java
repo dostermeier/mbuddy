@@ -41,6 +41,6 @@ public class RestMailAPI extends AbstractRestAPI implements MailAPI {
             throw new RuntimeException(response.toString());
         }
 
-        return response.readEntity(new GenericType<List<MailMessage>>(List.class));
+        return response.readEntity(new GenericType<List<MailMessage>>(){});
     }
 }

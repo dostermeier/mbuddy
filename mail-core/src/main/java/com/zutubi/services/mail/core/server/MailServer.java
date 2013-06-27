@@ -3,15 +3,20 @@ package com.zutubi.services.mail.core.server;
 import static com.google.common.collect.Lists.newArrayList;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.internet.MimeMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -135,6 +140,7 @@ public class MailServer implements MailAPI {
                 if (!messages.containsKey(recipient)) {
                     messages.put(recipient, Lists.<MailMessage>newArrayList());
                 }
+
                 messages.get(recipient).add(new MailMessage(from, recipient, out.toByteArray()));
             }
         }

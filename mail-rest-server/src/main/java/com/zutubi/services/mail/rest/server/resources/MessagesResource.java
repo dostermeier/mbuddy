@@ -9,6 +9,7 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,8 @@ public class MessagesResource {
     @GET
     @Path("/messages")
     @Produces({APPLICATION_JSON, APPLICATION_XML})
-    public List<MailMessage> retrieveMessages() {
-        List<MailMessage> messages = newArrayList();
-        messages.add(new MailMessage("sender1", "receiverA", new byte[0]));
-        messages.add(new MailMessage("sender2", "receiverB", new byte[0]));
-        messages.add(new MailMessage("sender3", "receiverC", new byte[0]));
-        return messages;
+    public List<MailMessage> retrieveMessages(@PathParam("email") String email) {
+        return mailServer.getMessages(email);
     }
 
     @Autowired
