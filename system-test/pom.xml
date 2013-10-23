@@ -9,7 +9,7 @@
         <artifactId>mail</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>mail-integration</artifactId>
+    <artifactId>system-test</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>

@@ -1,4 +1,4 @@
-package com.zutubi.services.mail.integration.resources;
+package com.zutubi.services.mail.system.resources;
 
 import com.zutubi.services.mail.core.lifecycle.Application;
 import com.zutubi.services.mail.core.lifecycle.Environment;

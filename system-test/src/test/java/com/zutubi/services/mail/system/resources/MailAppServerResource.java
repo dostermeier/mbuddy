@@ -1,8 +1,8 @@
-package com.zutubi.services.mail.integration.resources;
+package com.zutubi.services.mail.system.resources;
 
-import static com.zutubi.services.mail.integration.utils.InProject.locateRestWebApp;
-import static com.zutubi.services.mail.integration.utils.InProject.locateWebApp;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.zutubi.services.mail.system.utils.InProject.locateRestWebApp;
+import static com.zutubi.services.mail.system.utils.InProject.locateWebApp;
 
 import java.util.List;
 

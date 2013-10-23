@@ -1,9 +1,9 @@
 package com.zutubi.services.mail.boot;
 
+import static com.zutubi.services.mail.boot.BootControl.APP_HOME;
 import static com.zutubi.services.mail.boot.BootControl.CONFIGURATION_ERROR;
 import static com.zutubi.services.mail.boot.BootControl.DEBUG;
 import static com.zutubi.services.mail.boot.BootControl.INVOCATION_ERROR;
-import static com.zutubi.services.mail.boot.BootControl.APP_HOME;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 

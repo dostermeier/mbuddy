@@ -1,11 +1,10 @@
-package com.zutubi.services.mail.integration.rest;
+package com.zutubi.services.mail.system.rest;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 import java.io.ByteArrayInputStream;
-import java.nio.charset.Charset;
 import java.security.Security;
 import java.util.List;
 import java.util.Properties;
@@ -14,9 +13,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 
 import org.testng.annotations.AfterSuite;
@@ -24,8 +21,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Charsets;
-import com.sun.mail.smtp.SMTPTransport;
 import com.zutubi.services.mail.api.MailAPI;
 import com.zutubi.services.mail.api.MailMessage;
 import com.zutubi.services.mail.client.MailClient;
@@ -33,13 +28,13 @@ import com.zutubi.services.mail.client.MailClientManager;
 import com.zutubi.services.mail.core.lifecycle.Environment;
 import com.zutubi.services.mail.core.utils.Clock;
 import com.zutubi.services.mail.core.utils.SystemClock;
-import com.zutubi.services.mail.integration.resources.MailAppServer;
-import com.zutubi.services.mail.integration.resources.MailAppServerResource;
+import com.zutubi.services.mail.system.resources.MailAppServer;
+import com.zutubi.services.mail.system.resources.MailAppServerResource;
 
 /**
  *
  */
-public class SimpleRestTest {
+public class MessagesResourceTest {
 
     private Clock clock = new SystemClock();
 

@@ -54,9 +54,9 @@
         <module>mail-rest-client</module>
         <module>mail-rest-server</module>
         <module>mail-web</module>
-        <module>mail-package</module>
-        <module>mail-integration</module>
         <module>mail-test</module>
+        <module>system-test</module>
+        <module>package-zip</module>
     </modules>
 
     <dependencyManagement>

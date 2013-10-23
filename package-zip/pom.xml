@@ -9,7 +9,7 @@
         <artifactId>mail</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>mail-package</artifactId>
+    <artifactId>package-zip</artifactId>
     <packaging>pom</packaging> <!-- grr at not being able to specify zip, what gives? -->
 
     <dependencies>

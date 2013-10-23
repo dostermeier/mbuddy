@@ -23,7 +23,8 @@ import java.io.IOException;
  * 	}
  * }
  * </pre>
- */public class TemporaryFolder extends ExternalResource {
+ */
+public class TemporaryFolder extends ExternalResource {
 
     private File folder;
 

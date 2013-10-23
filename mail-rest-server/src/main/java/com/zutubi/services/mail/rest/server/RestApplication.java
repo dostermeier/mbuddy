@@ -12,8 +12,8 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.filter.UriConnegFilter;
 import org.glassfish.jersey.server.wadl.WadlFeature;
 
-import com.zutubi.services.mail.rest.server.spring.SpringLifecycleListener;
 import com.google.common.collect.Maps;
+import com.zutubi.services.mail.rest.server.spring.SpringLifecycleListener;
 
 /**
  * Jersey application configuration.

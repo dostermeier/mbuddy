@@ -9,11 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
-import com.zutubi.services.mail.core.lifecycle.Environment;
-import com.zutubi.services.mail.core.lifecycle.LifecycleComponent;
 import com.yammer.metrics.jetty.InstrumentedHandler;
 import com.yammer.metrics.jetty.InstrumentedQueuedThreadPool;
 import com.yammer.metrics.jetty.InstrumentedSelectChannelConnector;
+import com.zutubi.services.mail.core.lifecycle.Environment;
+import com.zutubi.services.mail.core.lifecycle.LifecycleComponent;
 
 import ch.qos.logback.access.jetty.RequestLogImpl;
 

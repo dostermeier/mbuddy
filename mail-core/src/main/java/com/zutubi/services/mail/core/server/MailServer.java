@@ -3,20 +3,15 @@ package com.zutubi.services.mail.core.server;
 import static com.google.common.collect.Lists.newArrayList;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.internet.MimeMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,11 +29,11 @@ import org.subethamail.smtp.auth.UsernamePasswordValidator;
 import org.subethamail.smtp.server.MessageListenerAdapter;
 import org.subethamail.smtp.server.SMTPServer;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.zutubi.services.mail.api.MailAPI;
 import com.zutubi.services.mail.api.MailMessage;
 import com.zutubi.services.mail.core.lifecycle.Environment;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  *

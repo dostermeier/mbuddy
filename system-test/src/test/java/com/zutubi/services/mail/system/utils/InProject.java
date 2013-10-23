@@ -1,4 +1,4 @@
-package com.zutubi.services.mail.integration.utils;
+package com.zutubi.services.mail.system.utils;
 
 import static com.google.common.collect.Lists.newArrayList;
 

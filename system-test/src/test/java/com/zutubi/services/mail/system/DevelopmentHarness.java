@@ -1,10 +1,10 @@
-package com.zutubi.services.mail.integration;
+package com.zutubi.services.mail.system;
 
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
-import com.zutubi.services.mail.integration.resources.MailAppServerResource;
+import com.zutubi.services.mail.system.resources.MailAppServerResource;
 
 /**
  * This development harness allows the application to be run from within an

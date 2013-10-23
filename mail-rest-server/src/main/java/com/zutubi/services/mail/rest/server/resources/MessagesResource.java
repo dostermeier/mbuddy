@@ -1,6 +1,5 @@
 package com.zutubi.services.mail.rest.server.resources;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 
