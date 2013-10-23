@@ -1,33 +1,30 @@
 package com.zutubi.services.mail.system.rest;
 
+import static com.zutubi.services.mail.system.utils.SimpleMailMessageBuilder.simpleMailMessage;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 import java.io.ByteArrayInputStream;
-import java.security.Security;
 import java.util.List;
 import java.util.Properties;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.Iterables;
 import com.zutubi.services.mail.api.MailAPI;
 import com.zutubi.services.mail.api.MailMessage;
 import com.zutubi.services.mail.client.MailClient;
 import com.zutubi.services.mail.client.MailClientManager;
-import com.zutubi.services.mail.core.lifecycle.Environment;
-import com.zutubi.services.mail.core.utils.Clock;
-import com.zutubi.services.mail.core.utils.SystemClock;
 import com.zutubi.services.mail.system.resources.MailAppServer;
 import com.zutubi.services.mail.system.resources.MailAppServerResource;
 
@@ -36,10 +33,9 @@ import com.zutubi.services.mail.system.resources.MailAppServerResource;
  */
 public class MessagesResourceTest {
 
-    private Clock clock = new SystemClock();
-
     private final MailAppServerResource APP_SERVER = new MailAppServerResource();
     private MailClient client;
+    private JavaMailSenderImpl javaMailSender;
 
     @BeforeSuite
     public void beforeSuite() throws Throwable {
@@ -56,12 +52,21 @@ public class MessagesResourceTest {
         MailAppServer appServer = APP_SERVER.getAppServer();
         String connectionUrl = "mail:rest://" + appServer.getHostName() + ":" + appServer.getEnvironment().getRestPort();
         client = MailClientManager.getClient(connectionUrl);
+
+        javaMailSender = new JavaMailSenderImpl();
+        javaMailSender.setHost("localhost");
+        javaMailSender.setPort(appServer.getEnvironment().getSmtpPort());
     }
 
     @Test
-    public void testGetMessages() throws Exception {
+    public void testGetMessagesByAccount() throws Exception {
 
-        sendEmail("to@gmail.com", "hello world");
+        javaMailSender.send(simpleMailMessage()
+                .setTo("to@gmail.com")
+                .setFrom("from@gmail.com")
+                .setText("hello world")
+                .build()
+        );
 
         MailAPI api = client.getMailAPI();
         List<MailMessage> messages = api.getMessages("to@gmail.com");
@@ -78,47 +83,36 @@ public class MessagesResourceTest {
         assertThat(mimeMessage.getContent().toString(), is("hello world"));
     }
 
-    private void sendEmail(String recipient, String message) throws MessagingException {
-        Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
-        final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+    @Test
+    public void testGetMessages() {
 
-        Environment environment = APP_SERVER.getAppServer().getEnvironment();
+        javaMailSender.send(simpleMailMessage()
+                .setTo("123@gmail.com")
+                .setText("hello world")
+                .build()
+        );
 
-        // Get a Properties object
-        Properties props = new Properties();
-        props.setProperty("mail.smtps.host", "localhost");
-        props.setProperty("mail.smtp.port", String.valueOf(environment.getSmtpPort()));
+        MailAPI mailAPI = client.getMailAPI();
+        List<MailMessage> messages = mailAPI.getMessages();
 
-/*
-        props.setProperty("mail.smtps.auth", "true");
-        props.setProperty("mail.smtps.quitwait", "false");
-        props.setProperty("mail.smtp.socketFactory.class", SSL_FACTORY);
-        props.setProperty("mail.smtp.socketFactory.fallback", "false");
-        props.setProperty("mail.smtp.socketFactory.port", "465");
-*/
+        assertThat(messages.size(), greaterThan(0));
+    }
 
+    @Test
+    public void testGetMessage() {
 
-        Session session = Session.getInstance(props, null);
+        javaMailSender.send(simpleMailMessage()
+                .setTo("123@gmail.com")
+                .setText("hello world")
+                .build()
+        );
 
-        // -- Create a new message --
-        final MimeMessage msg = new MimeMessage(session);
+        MailAPI mailAPI = client.getMailAPI();
+        List<MailMessage> messages = mailAPI.getMessages();
 
-        // -- Set the FROM and TO fields --
-        msg.setFrom(new InternetAddress("from@gmail.com"));
-        msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient, false));
+        MailMessage message = Iterables.getFirst(messages, null);
 
-        msg.setSubject("test");
-        msg.setText(message, "utf-8");
-        msg.setSentDate(clock.now());
-
-        Transport.send(msg);
-
-/*
-        SMTPTransport t = (SMTPTransport)session.getTransport("smtps");
-
-        t.connect("smtp.gmail.com", username, password);
-        t.sendMessage(msg, msg.getAllRecipients());
-        t.close();
-*/
+        MailMessage specificMessage = mailAPI.getMessage(message.getId());
+        assertThat(specificMessage, is(notNullValue()));
     }
 }

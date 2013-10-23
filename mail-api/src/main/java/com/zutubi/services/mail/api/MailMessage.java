@@ -1,5 +1,7 @@
 package com.zutubi.services.mail.api;
 
+import java.util.UUID;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -8,6 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class MailMessage {
 
+    private UUID id;
     private byte[] data;
     private String envelopeSender;
     private String envelopeReceiver;
@@ -16,6 +19,7 @@ public class MailMessage {
     }
 
     public MailMessage(String envelopeSender, String envelopeReceiver, byte[] messageData) {
+        this.id = UUID.randomUUID();
         this.envelopeSender = envelopeSender;
         this.envelopeReceiver = envelopeReceiver;
         this.data = messageData;
@@ -54,4 +58,11 @@ public class MailMessage {
         this.envelopeSender = envelopeSender;
     }
 
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
 }

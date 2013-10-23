@@ -4,7 +4,6 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 
 import java.util.List;
-import java.util.UUID;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -20,23 +19,24 @@ import com.zutubi.services.mail.core.server.MailServer;
 /**
  *
  */
-@Path("/messages")
+@Path("/accounts")
 @Consumes({APPLICATION_JSON, APPLICATION_XML})
-public class MessagesResource {
+public class AccountsResource {
 
     private MailServer mailServer;
 
     @GET
+    @Path("/")
     @Produces({APPLICATION_JSON, APPLICATION_XML})
-    public List<MailMessage> retrieveMessages() {
-        return mailServer.getMessages();
+    public List<String> retrieveAccounts() {
+        return mailServer.getAccounts();
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{email}/messages")
     @Produces({APPLICATION_JSON, APPLICATION_XML})
-    public MailMessage retrieveMessage(@PathParam("id") UUID id) {
-        return mailServer.getMessage(id);
+    public List<MailMessage> retrieveMessages(@PathParam("email") String email) {
+        return mailServer.getMessages(email);
     }
 
     @Autowired

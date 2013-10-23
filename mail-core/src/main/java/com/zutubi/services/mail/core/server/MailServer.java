@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -20,7 +21,6 @@ import org.springframework.stereotype.Component;
 import org.subethamail.smtp.AuthenticationHandler;
 import org.subethamail.smtp.AuthenticationHandlerFactory;
 import org.subethamail.smtp.MessageListener;
-import org.subethamail.smtp.TooMuchDataException;
 import org.subethamail.smtp.auth.LoginAuthenticationHandler;
 import org.subethamail.smtp.auth.LoginFailedException;
 import org.subethamail.smtp.auth.PlainAuthenticationHandler;
@@ -50,8 +50,8 @@ public class MailServer implements MailAPI {
     private SMTPServer server;
 
     /** */
-    private Map<String, List<MailMessage>> messages = Collections.synchronizedMap(Maps.<String, List<MailMessage>>newHashMap());
-
+    private Map<String, List<MailMessage>> messagesByAccount = Collections.synchronizedMap(Maps.<String, List<MailMessage>>newHashMap());
+    private Map<UUID, MailMessage> messagesById = Collections.synchronizedMap(Maps.<UUID, MailMessage>newHashMap());
 
     @PostConstruct
     public void init() {
@@ -75,12 +75,27 @@ public class MailServer implements MailAPI {
     }
 
     @Override
+    public List<MailMessage> getMessages() {
+        return newArrayList(messagesById.values());
+    }
+
+    @Override
     public List<MailMessage> getMessages(String account) {
-        List<MailMessage> accountMessages = messages.get(account);
+        List<MailMessage> accountMessages = messagesByAccount.get(account);
         if (accountMessages != null) {
             return accountMessages;
         }
         return newArrayList();
+    }
+
+    @Override
+    public MailMessage getMessage(UUID uuid) {
+        return messagesById.get(uuid);
+    }
+
+    @Override
+    public List<String> getAccounts() {
+        return newArrayList(messagesByAccount.keySet());
     }
 
     public void setEnvironment(Environment environment) {
@@ -121,7 +136,7 @@ public class MailServer implements MailAPI {
         /**
          * Cache the messages in memory
          */
-        public void deliver(String from, String recipient, InputStream data) throws TooMuchDataException, IOException {
+        public void deliver(String from, String recipient, InputStream data) throws IOException {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             data = new BufferedInputStream(data);
 
@@ -132,11 +147,13 @@ public class MailServer implements MailAPI {
             }
 
             synchronized (this) {
-                if (!messages.containsKey(recipient)) {
-                    messages.put(recipient, Lists.<MailMessage>newArrayList());
+                if (!messagesByAccount.containsKey(recipient)) {
+                    messagesByAccount.put(recipient, Lists.<MailMessage>newArrayList());
                 }
 
-                messages.get(recipient).add(new MailMessage(from, recipient, out.toByteArray()));
+                MailMessage mailMessage = new MailMessage(from, recipient, out.toByteArray());
+                messagesByAccount.get(recipient).add(mailMessage);
+                messagesById.put(mailMessage.getId(), mailMessage);
             }
         }
     }
