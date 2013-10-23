@@ -31,9 +31,9 @@ run:
 
     $ mvn clean package
 
-To execute the integration test suite, run:
+To execute the system test suite, run:
 
-    $ mvn clean test -Pintegration
+    $ mvn clean test -Psystem
 
 
 Feedback

@@ -39,56 +39,24 @@
             <type>test-jar</type>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.plugin.version}</version>
+                <configuration>
+                    <!-- Change the server ports so that they do not collide with a manually running instance. -->
+                    <systemPropertyVariables>
+                        <http.port>8430</http.port>
+                        <rest.port>8431</rest.port>
+                        <smtp.port>8432</smtp.port>
+                    </systemPropertyVariables>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
-    <profiles>
-        <!-- By default, we do not run any of the tests in this package. -->
-        <profile>
-            <id>continuous</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <test.status>skipped</test.status>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${surefire.plugin.version}</version>
-                        <configuration>
-                            <excludes>
-                                <exclude>**/*Test.java</exclude>
-                            </excludes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <!-- The integration profile does not exclude any of the tests. -->
-            <id>integration</id>
-            <properties>
-                <test.status>running</test.status>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${surefire.plugin.version}</version>
-                        <configuration>
-                            <!-- Change the server ports so that they do not collide with a manually running instance. -->
-                            <systemPropertyVariables>
-                                <http.port>8430</http.port>
-                                <rest.port>8431</rest.port>
-                                <smtp.port>8432</smtp.port>
-                            </systemPropertyVariables>
-                            <includes>
-                                <include>**/*Test.java</include>
-                            </includes>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>
