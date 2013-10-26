@@ -15,10 +15,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 
 /**
- * Provide injection support for springs {@link Autowired} annotation.
+ * Provide injection support for accessing the spring context via the {@link Autowired} annotation.
  *
  * Note: This implementation does NOT support {@link Qualifier} or {@link Value}.
- *
  */
 @Singleton
 public class AutowiredInjectResolver implements InjectionResolver<Autowired> {
@@ -47,14 +46,12 @@ public class AutowiredInjectResolver implements InjectionResolver<Autowired> {
 
     @Override
     public boolean isConstructorParameterIndicator() {
-        LOGGER.debug("isConstructorParameterIndicator");
-        return false;
+        return true;
     }
 
     @Override
     public boolean isMethodParameterIndicator() {
-        LOGGER.debug("isMethodParameterIndicator");
-        return false;
+        return true;
     }
 
 }

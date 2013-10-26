@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 
 import java.io.ByteArrayInputStream;
 import java.util.List;
@@ -31,57 +32,7 @@ import com.zutubi.services.mail.system.resources.MailAppServerResource;
 /**
  *
  */
-public class MessagesResourceTest {
-
-    private final MailAppServerResource APP_SERVER = new MailAppServerResource();
-    private MailClient client;
-    private JavaMailSenderImpl javaMailSender;
-
-    @BeforeSuite
-    public void beforeSuite() throws Throwable {
-        APP_SERVER.before();
-    }
-
-    @AfterSuite
-    public void afterSuite() throws Throwable {
-        APP_SERVER.after();
-    }
-
-    @BeforeMethod(alwaysRun = true)
-    public void setUp() {
-        MailAppServer appServer = APP_SERVER.getAppServer();
-        String connectionUrl = "mail:rest://" + appServer.getHostName() + ":" + appServer.getEnvironment().getRestPort();
-        client = MailClientManager.getClient(connectionUrl);
-
-        javaMailSender = new JavaMailSenderImpl();
-        javaMailSender.setHost("localhost");
-        javaMailSender.setPort(appServer.getEnvironment().getSmtpPort());
-    }
-
-    @Test
-    public void testGetMessagesByAccount() throws Exception {
-
-        javaMailSender.send(simpleMailMessage()
-                .setTo("to@gmail.com")
-                .setFrom("from@gmail.com")
-                .setText("hello world")
-                .build()
-        );
-
-        MailAPI api = client.getMailAPI();
-        List<MailMessage> messages = api.getMessages("to@gmail.com");
-        assertThat(messages, hasSize(1));
-
-        MailMessage message = messages.get(0);
-        assertThat(message.getEnvelopeReceiver(), is("to@gmail.com"));
-        assertThat(message.getEnvelopeSender(), is("from@gmail.com"));
-
-        Session session = Session.getDefaultInstance(new Properties());
-        MimeMessage mimeMessage = new MimeMessage(session, new ByteArrayInputStream(message.getData()));
-
-        assertThat(mimeMessage.isMimeType("text/plain"), is(true));
-        assertThat(mimeMessage.getContent().toString(), is("hello world"));
-    }
+public class MessagesResourceTest extends AbstractResourceTest {
 
     @Test
     public void testGetMessages() {
@@ -111,8 +62,41 @@ public class MessagesResourceTest {
         List<MailMessage> messages = mailAPI.getMessages();
 
         MailMessage message = Iterables.getFirst(messages, null);
+        assertThat(message, is(notNullValue()));
 
         MailMessage specificMessage = mailAPI.getMessage(message.getId());
         assertThat(specificMessage, is(notNullValue()));
+    }
+
+    @Test
+    public void testDeleteMessages() {
+        javaMailSender.send(simpleMailMessage()
+                .setTo("123@gmail.com")
+                .setText("hello world")
+                .build()
+        );
+
+        MailAPI mailAPI = client.getMailAPI();
+        assertThat(mailAPI.getMessages().size(), greaterThan(0));
+
+        mailAPI.deleteMessages();
+        assertThat(mailAPI.getMessages().size(), is(0));
+    }
+
+    @Test
+    public void testDeleteMessage() {
+        javaMailSender.send(simpleMailMessage()
+                .setTo("123@gmail.com")
+                .setText("hello world")
+                .build()
+        );
+
+        MailAPI mailAPI = client.getMailAPI();
+        MailMessage message = Iterables.getFirst(mailAPI.getMessages(), null);
+        assertThat(message, is(notNullValue()));
+
+        mailAPI.deleteMessage(message.getId());
+        message = mailAPI.getMessage(message.getId());
+        assertThat(message, is(nullValue()));
     }
 }

@@ -32,6 +32,11 @@ public final class SimpleMailMessageBuilder {
         return this;
     }
 
+    public SimpleMailMessageBuilder setSubject(String subject) {
+        this.message.setSubject(subject);
+        return this;
+    }
+
     public SimpleMailMessage build() {
         return message;
     }

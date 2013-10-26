@@ -8,11 +8,19 @@ import java.util.UUID;
  */
 public interface MailAPI {
 
-    List<String> getAccounts();
+    void deleteAccount(String account);
+
+    Account getAccount(String email);
+
+    List<Account> getAccounts();
+
+    void deleteMessages();
 
     List<MailMessage> getMessages(String account);
 
     MailMessage getMessage(UUID uuid);
 
     List<MailMessage> getMessages();
+
+    void deleteMessage(UUID uuid);
 }

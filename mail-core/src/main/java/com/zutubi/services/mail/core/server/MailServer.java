@@ -31,6 +31,7 @@ import org.subethamail.smtp.server.SMTPServer;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.zutubi.services.mail.api.Account;
 import com.zutubi.services.mail.api.MailAPI;
 import com.zutubi.services.mail.api.MailMessage;
 import com.zutubi.services.mail.core.lifecycle.Environment;
@@ -74,13 +75,11 @@ public class MailServer implements MailAPI {
         this.server.stop();
     }
 
-    @Override
-    public List<MailMessage> getMessages() {
+    @Override public List<MailMessage> getMessages() {
         return newArrayList(messagesById.values());
     }
 
-    @Override
-    public List<MailMessage> getMessages(String account) {
+    @Override public List<MailMessage> getMessages(String account) {
         List<MailMessage> accountMessages = messagesByAccount.get(account);
         if (accountMessages != null) {
             return accountMessages;
@@ -88,14 +87,44 @@ public class MailServer implements MailAPI {
         return newArrayList();
     }
 
-    @Override
-    public MailMessage getMessage(UUID uuid) {
+    @Override public MailMessage getMessage(UUID uuid) {
         return messagesById.get(uuid);
     }
 
-    @Override
-    public List<String> getAccounts() {
-        return newArrayList(messagesByAccount.keySet());
+    @Override public void deleteMessage(UUID uuid) {
+        messagesById.remove(uuid);
+    }
+
+    @Override public void deleteMessages() {
+        messagesById.clear();
+        for (String account : messagesByAccount.keySet()) {
+            messagesByAccount.get(account).clear();
+        }
+    }
+
+    @Override public void deleteAccount(String account) {
+        if (messagesByAccount.containsKey(account)) {
+            List<MailMessage> messages = messagesByAccount.get(account);
+            for (MailMessage message : messages) {
+                messagesById.remove(message.getId());
+            }
+            messagesByAccount.remove(account);
+        }
+    }
+
+    @Override public Account getAccount(String email) {
+        if (messagesByAccount.containsKey(email)) {
+            return new Account(email);
+        }
+        return null;
+    }
+
+    @Override public List<Account> getAccounts() {
+        List<Account> accounts = newArrayList();
+        for (String email : messagesByAccount.keySet()) {
+            accounts.add(new Account(email));
+        }
+        return accounts;
     }
 
     public void setEnvironment(Environment environment) {

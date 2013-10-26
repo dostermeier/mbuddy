@@ -15,7 +15,6 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.access.BeanFactoryReference;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import com.zutubi.services.mail.core.lifecycle.ApplicationContextLocator;
@@ -60,7 +59,6 @@ public class SpringLifecycleListener implements ContainerLifecycleListener {
             DynamicConfigurationService dcs = locator.getService(DynamicConfigurationService.class);
             DynamicConfiguration dynamicConfiguration = dcs.createDynamicConfiguration();
             dynamicConfiguration.addActiveDescriptor(createConstantDescriptor(new AutowiredInjectResolver(ctx)));
-            dynamicConfiguration.addActiveDescriptor(createConstantDescriptor(ctx, null, ApplicationContext.class));
             dynamicConfiguration.commit();
 
             LOGGER.info("jersey-spring initialized");
