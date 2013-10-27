@@ -25,10 +25,6 @@ public class MailAppServer {
         return "localhost";
     }
 
-    public String whereIs(String relativeUrl) {
-        return getHttpApi().whereIs(relativeUrl);
-    }
-
     private String getCommonPath(String relativeUrl) {
         if (!relativeUrl.startsWith("/")) {
             relativeUrl = getEnvironment().getContextPath() + relativeUrl;
@@ -77,21 +73,6 @@ public class MailAppServer {
             public String whereIs(String resource) {
                 String path = getCommonPath(resource);
                 return "http://" + getHostName() + ":" + getEnvironment().getRestPort() + path;
-            }
-        };
-    }
-
-    /**
-     * Get the API instance for the Http API.
-     *
-     * @return the HTTP API instance.
-     */
-    public API getHttpApi() {
-        return new API() {
-            @Override
-            public String whereIs(String resource) {
-                String path = getCommonPath(resource);
-                return "http://" + getHostName() + ":" + getEnvironment().getHttpPort() + path;
             }
         };
     }

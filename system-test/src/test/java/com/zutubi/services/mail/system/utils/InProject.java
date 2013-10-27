@@ -19,22 +19,12 @@ public class InProject {
 
     /**
      * Locate the canonical path for the webapp directory within the
-     * io-rest-server module.
+     * mail-rest-server module.
      *
      * @return the canonical path.
      */
     public static String locateRestWebApp() {
         return locateCanonical("**/mail-rest-server/src/main/webapp");
-    }
-
-    /**
-     * Locate the canonical path for the webapp directory within the
-     * io-web module.
-     *
-     * @return the canonical path.
-     */
-    public static String locateWebApp() {
-        return locateCanonical("**/mail-web/src/main/webapp");
     }
 
     public static String locateCanonical(String path) {

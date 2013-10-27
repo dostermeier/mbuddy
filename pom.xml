@@ -48,15 +48,12 @@
 
     <modules>
         <module>mail-api</module>
-        <module>mail-boot</module>
         <module>mail-client</module>
         <module>mail-core</module>
         <module>mail-rest-client</module>
         <module>mail-rest-server</module>
-        <module>mail-web</module>
         <module>mail-test</module>
         <module>system-test</module>
-        <module>package-zip</module>
     </modules>
 
     <dependencyManagement>
@@ -276,12 +273,6 @@
                 <groupId>${project.groupId}</groupId>
                 <artifactId>mail-core</artifactId>
                 <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>mail-web</artifactId>
-                <version>${project.version}</version>
-                <classifier>classes</classifier>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>

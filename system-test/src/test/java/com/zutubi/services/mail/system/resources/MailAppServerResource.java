@@ -2,7 +2,6 @@ package com.zutubi.services.mail.system.resources;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.zutubi.services.mail.system.utils.InProject.locateRestWebApp;
-import static com.zutubi.services.mail.system.utils.InProject.locateWebApp;
 
 import java.util.List;
 
@@ -36,7 +35,6 @@ public class MailAppServerResource extends ExternalResource {
 
                 appServer = new MailAppServer();
                 appServer.getEnvironment().setHome(tmp.getRoot());
-                appServer.getEnvironment().setResourceBase(locateWebApp());
                 appServer.getEnvironment().setRestResourceBase(locateRestWebApp());
                 appServer.start();
             }

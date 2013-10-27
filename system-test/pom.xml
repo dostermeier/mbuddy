@@ -20,11 +20,6 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>mail-web</artifactId>
-            <classifier>classes</classifier>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>mail-rest-server</artifactId>
             <classifier>classes</classifier>
         </dependency>

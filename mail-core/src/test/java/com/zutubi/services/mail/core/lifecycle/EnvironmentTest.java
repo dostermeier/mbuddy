@@ -2,7 +2,6 @@ package com.zutubi.services.mail.core.lifecycle;
 
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
@@ -58,12 +57,6 @@ public class EnvironmentTest {
 
         System.setProperty("param.a", "system");
         assertThat(env.getProperty("param.a"), is("system"));
-    }
-
-    @Test
-    public void testResourceBaseUsesHome() {
-        env.setHome(new File("/some/path/"));
-        assertThat(env.getResourceBase(), containsString("some/path/system/www"));
     }
 
     @Test

@@ -29,9 +29,6 @@ public class Environment extends StandardEnvironment implements Serializable {
 
     public static final String HOME_LOCATION = "home.location";
 
-    public static final String HTTP_PORT = "http.port";
-    public static final int DEFAULT_HTTP_PORT = 8400;
-
     public static final String REST_PORT = "rest.port";
     public static final int DEFAULT_REST_PORT = 8401;
 
@@ -43,9 +40,6 @@ public class Environment extends StandardEnvironment implements Serializable {
 
     public static final String REST_RESOURCE_BASE = "rest.resource.base";
     public static final String DEFAULT_REST_RESOURCE_BASE = "${home.location}/system/rest";
-
-    public static final String HTTP_RESOURCE_BASE = "http.resource.base";
-    public static final String DEFAULT_HTTP_RESOURCE_BASE = "${home.location}/system/www";
 
     public static final String TMP_LOCATION = "tmp.location";
     public static final String DEFAULT_TMP_LOCATION = "${java.io.tmpdir}";
@@ -85,7 +79,6 @@ public class Environment extends StandardEnvironment implements Serializable {
             // for properties where we want to allow substitutions we need to add the
             // default values to this source.  Substitutions are only processed in the
             // property value, not in the property value default.
-            defaultSource.getSource().put(HTTP_RESOURCE_BASE, DEFAULT_HTTP_RESOURCE_BASE);
             defaultSource.getSource().put(REST_RESOURCE_BASE, DEFAULT_REST_RESOURCE_BASE);
             defaultSource.getSource().put(TMP_LOCATION, DEFAULT_TMP_LOCATION);
 
@@ -114,14 +107,6 @@ public class Environment extends StandardEnvironment implements Serializable {
         setRuntimeProperty(HOME_LOCATION, home.getAbsolutePath());
     }
 
-    public int getHttpPort() {
-        return getProperty(HTTP_PORT, Integer.class, DEFAULT_HTTP_PORT);
-    }
-
-    public void setHttpPort(int port) {
-        setRuntimeProperty(HTTP_PORT, port);
-    }
-
     public int getRestPort() {
         return getProperty(REST_PORT, Integer.class, DEFAULT_REST_PORT);
     }
@@ -144,14 +129,6 @@ public class Environment extends StandardEnvironment implements Serializable {
 
     public void setContextPath(String contextPath) {
         setRuntimeProperty(HTTP_CONTEXT, contextPath);
-    }
-
-    public String getResourceBase() {
-        return getProperty(HTTP_RESOURCE_BASE);
-    }
-
-    public void setResourceBase(String path) {
-        setRuntimeProperty(HTTP_RESOURCE_BASE, path);
     }
 
     public String getRestResourceBase() {
