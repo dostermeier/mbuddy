@@ -7,6 +7,7 @@ import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 import com.yammer.metrics.jetty.InstrumentedHandler;
@@ -114,6 +115,7 @@ public class RestLifecycleComponent extends LifecycleComponent {
         return 10;
     }
 
+    @Autowired
     public void setEnvironment(Environment environment) {
         this.environment = environment;
     }

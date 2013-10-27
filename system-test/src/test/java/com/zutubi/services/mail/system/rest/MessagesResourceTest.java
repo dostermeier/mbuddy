@@ -11,6 +11,7 @@ import static org.hamcrest.Matchers.nullValue;
 import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
@@ -32,6 +33,7 @@ import com.zutubi.services.mail.system.resources.MailAppServerResource;
 /**
  *
  */
+@Test(singleThreaded = true)
 public class MessagesResourceTest extends AbstractResourceTest {
 
     @Test
@@ -47,6 +49,13 @@ public class MessagesResourceTest extends AbstractResourceTest {
         List<MailMessage> messages = mailAPI.getMessages();
 
         assertThat(messages.size(), greaterThan(0));
+    }
+
+    @Test
+    public void testGetUnknownMessage() {
+        MailAPI mailAPI = client.getMailAPI();
+        MailMessage specificMessage = mailAPI.getMessage(UUID.randomUUID());
+        assertThat(specificMessage, is(nullValue()));
     }
 
     @Test

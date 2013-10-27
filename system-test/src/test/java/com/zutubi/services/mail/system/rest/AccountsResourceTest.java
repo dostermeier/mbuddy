@@ -22,6 +22,7 @@ import com.zutubi.services.mail.api.MailMessage;
 /**
  *
  */
+@Test(singleThreaded = true)
 public class AccountsResourceTest extends AbstractResourceTest {
 
     @Test
