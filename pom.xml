@@ -6,7 +6,7 @@
 
     <groupId>com.zutubi.services</groupId>
     <artifactId>mail</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.7.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -262,13 +262,6 @@
                 <groupId>${project.groupId}</groupId>
                 <artifactId>mail-client</artifactId>
                 <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>mail-test</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-                <type>test-jar</type>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
