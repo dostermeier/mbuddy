@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>mail</artifactId>
+        <groupId>com.zutubi.services</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>jar</packaging>
+
+    <artifactId>package-deb</artifactId>
+
+    <properties>
+
+        <!-- Plugin versions: -->
+        <antrun.plugin.version>1.7</antrun.plugin.version>
+        <jdeb.plugin.version>1.0.1</jdeb.plugin.version>
+        <ant-jsch.version>1.7.1</ant-jsch.version>
+        <jcraft.version>0.1.48</jcraft.version>
+
+        <!--
+        During a TeamCity build, the following properties will be injected.
+        We capture this as a property as the 'build.number' itself is not directly
+        available everywhere otherwise. (eg: jdeb packages)
+        -->
+        <build.version>${build.number}</build.version>
+
+        <!--
+        This property should be overridden within each project that creates a debian package
+        with the name of the debian package. For example:
+            * ebuddy-xmsserver
+            * ebuddy-omsserver
+            * etc...
+        -->
+        <debian.package.name>zutubi-mbuddy</debian.package.name>
+
+        <!--
+        This property should be overridden to define the path to the root of what
+        will be added to the debian package. For example:
+
+            If we are packaging a war from another module:
+
+                ${project.basedir}/../webapp/target/webapp-${project.version}
+        -->
+        <debian.package.root>${project.basedir}/../mail-rest-server/target/mail-rest-server-${project.version}</debian.package.root>
+
+        <!-- Standard name for the debian package file. -->
+        <debian.package.file>${project.build.directory}/${debian.package.name}_${project.version}_all.deb</debian.package.file>
+
+        <!--
+        Properties used for the package scp upload.
+        -->
+        <scp.user>deb-upload</scp.user>
+        <scp.host>git.ebuddy.com</scp.host>
+        <scp.keyfile>/home/teamcity/.ssh/remote_deploy_deb_rsa</scp.keyfile>
+
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.zutubi.services</groupId>
+            <artifactId>mail-rest-server</artifactId>
+            <classifier>classes</classifier>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+
+            <!-- Debian package creation on package -->
+            <plugin>
+                <groupId>org.vafer</groupId>
+                <artifactId>jdeb</artifactId>
+                <version>${jdeb.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jdeb</goal>
+                        </goals>
+                        <configuration>
+                            <verbose>true</verbose>
+                            <controlDir>${project.basedir}/src/main/deb/control</controlDir>
+                            <deb>${project.build.directory}/${debian.package.name}_${project.version}_all.deb</deb>
+                            <dataSet>
+                                <data>
+                                    <src>${debian.package.root}</src>
+                                    <type>directory</type>
+                                    <mapper>
+                                        <type>perm</type>
+                                        <prefix>/usr/share/${debian.package.name}</prefix>
+                                    </mapper>
+                                </data>
+                                <data>
+                                    <src>${project.basedir}/src/main/deb/etc</src>
+                                    <type>directory</type>
+                                    <mapper>
+                                        <type>perm</type>
+                                        <prefix>/etc</prefix>
+                                        <filemode>644</filemode>
+                                    </mapper>
+                                </data>
+                                <data>
+                                    <src>${project.basedir}/src/main/deb/usr</src>
+                                    <type>directory</type>
+                                    <mapper>
+                                        <type>perm</type>
+                                        <prefix>/usr</prefix>
+                                    </mapper>
+                                </data>
+                            </dataSet>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Debian package upload on deploy. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>${antrun.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>scp</id>
+                        <phase>deploy</phase>
+                        <configuration>
+                            <tasks>
+                                <echo message="SCP debian package to ${scp.user}@${scp.host}"/>
+                                <echo message=" ** build version = ${build.version}"/>
+                                <echo message=" ** pom version = ${project.version}"/>
+                                <scp file="${debian.package.file}"
+                                     todir="${scp.user}@${scp.host}:${debian.package.name}_${build.version}_all.deb"
+                                     keyfile="${scp.keyfile}"
+                                     passphrase=""
+                                     trust="true"
+                                     failonerror="false"
+                                     sftp="true"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant-jsch</artifactId>
+                        <version>${ant-jsch.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.jcraft</groupId>
+                        <artifactId>jsch</artifactId>
+                        <version>${jcraft.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>

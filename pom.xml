@@ -54,6 +54,7 @@
         <module>mail-rest-server</module>
         <module>mail-test</module>
         <module>system-test</module>
+        <module>package-deb</module>
     </modules>
 
     <dependencyManagement>
@@ -454,7 +455,6 @@
                     <version>${war.plugin.version}</version>
                     <configuration>
                         <attachClasses>true</attachClasses>
-                        <webappDirectory>target/webapp</webappDirectory>
                     </configuration>
                     <executions>
                         <execution>

@@ -1,0 +1,9 @@
+Package: zutubi-mbuddy
+Section: contrib/java
+Priority: optional
+Architecture: all
+Homepage: http://zutubi.com
+Depends: tomcat7
+Version: [[build.version]]
+Maintainer: Daniel Ostermeier <daniel.ostermeier@gmail.com>
+Description: Zutubi mBuddy - Mail server for Integration Test support.
