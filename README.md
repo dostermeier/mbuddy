@@ -9,7 +9,7 @@ designed to be used to support integration level testing scenarios for
 systems with email components.
 
 The emails sent sent by the integration environment can be captured and made
-available to a RESTful or Web API, or forwarded on to a live account.
+available to a RESTful or Web API (or in future forwarded on to a live account).
 
 License
 -------
